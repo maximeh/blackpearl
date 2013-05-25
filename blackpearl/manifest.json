@@ -1,0 +1,15 @@
+{
+  "name": "blackpearl",
+  "version": "2.0",
+  "manifest_version": 2,
+
+  "description": "If a tab is idle for too much time, kill its process to free resources without closing tabs. Tabs will reload automagically when selected.",
+  "icons": {"128": "icon128.png"},
+
+  "background": { "persistent": true, "scripts": ["background.js"] },
+  "minimum_chrome_version": "22",
+  "options_page": "options.html",
+  "permissions": [
+    "tabs", "http://*/*", "experimental", "alarms"
+  ]
+}
