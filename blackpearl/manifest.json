@@ -2,6 +2,7 @@
   "name": "blackpearl",
   "version": "2.0",
   "manifest_version": 2,
+  "update_url": "https://raw.github.com/maximeh/blackpearl/master/update.xml",
 
   "description": "If a tab is idle for too much time, kill its process to free resources without closing tabs. Tabs will reload automagically when selected.",
   "icons": {"128": "icon128.png"},
