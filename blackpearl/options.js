@@ -55,7 +55,7 @@ function save_options() {
 // Restores timer_input value from localStorage
 function restore_options() {
     var timer = localStorage["timer"];
-    if (!timer) return;
+    if (!timer) timer = 15;
     timer_input.value = timer;
 }
 
