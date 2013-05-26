@@ -58,6 +58,16 @@ chrome.windows.getAll({populate: true}, function (windows){
     });
 });
 
+// When a tab gets a suitable URL and is not already in our array, add it.
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    if (tab.url.indexOf('chrome://') == 0 || tab.url.indexOf('chrome-extension://') == 0)
+            return;
+    // If the tab is not already in our array, add it.
+    var new_tab = findById(tab_array, tabId);
+    if ( typeof new_tab !== "undefined") return;
+    tab_array.push({id: tabId, timer: 0, killed: false });
+});
+
 // Every time a tab is activated, its timer must be reset.
 chrome.tabs.onActivated.addListener(function(activeInfo) {
     var activated_tab = findById(tab_array, activeInfo.tabId);
@@ -68,12 +78,6 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
         chrome.tabs.reload(activated_tab.id);
         activated_tab.killed = false;
     }
-});
-
-// Add a new object to tab_array
-chrome.tabs.onCreated.addListener(function(tab) {
-    if (tab.url.indexOf('chrome://') == 0 || tab.url.indexOf('chrome-extension://') == 0) return;
-    tab_array.push({id: tab.id, timer: 0, killed: false });
 });
 
 // Remove the tab from tab_array
