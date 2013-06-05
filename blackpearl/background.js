@@ -27,6 +27,7 @@
 */
 
 var tab_array = [];
+var forbidden_url = ["chrome://", "chrome-extension://", "chrome-devtools://"];
 var TIMEOUT_TIMER = localStorage["timer"];
 if (typeof TIMEOUT_TIMER === "undefined") TIMEOUT_TIMER = 15;
 
@@ -37,6 +38,16 @@ chrome.alarms.create({periodInMinutes: 1.0});
 function update_storage(event_storage) {
     if (event_storage.key !== "timer") return;
     TIMEOUT_TIMER = event_storage.new_value;
+}
+
+// Returns true if a url is forbidden, false otherwise
+function is_forbidden(url) {
+    var found = false;
+    forbidden_url.forEach(function(f_url) {
+        if (url.indexOf(f_url) == 0)
+            found = true;
+    });
+    return found;
 }
 
 function findById(source, id) {
@@ -51,8 +62,7 @@ function findById(source, id) {
 chrome.windows.getAll({populate: true}, function (windows){
     windows.forEach(function(cwindow) {
         cwindow.tabs.forEach(function(tab) {
-            if (tab.url.indexOf('chrome://') == 0 || tab.url.indexOf('chrome-extension://') == 0)
-                            return;
+            if (is_forbidden(tab.url) == true) return;
             tab_array.push({id: tab.id, timer: 0, killed: false });
         });
     });
@@ -60,8 +70,7 @@ chrome.windows.getAll({populate: true}, function (windows){
 
 // When a tab gets a suitable URL and is not already in our array, add it.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (tab.url.indexOf('chrome://') == 0 || tab.url.indexOf('chrome-extension://') == 0)
-            return;
+    if (is_forbidden(tab.url) == true) return;
     // If the tab is not already in our array, add it.
     var new_tab = findById(tab_array, tabId);
     if ( typeof new_tab !== "undefined") return;
