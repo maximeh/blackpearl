@@ -37,6 +37,33 @@ function check_min() {
     }
 }
 
+// Keep the list of domain "clean" (no http nor www)
+function sanitize_list(ev) {
+    // If user press Enter, we sanitize the list, otherwise, we don't care.
+    if (ev.keyCode != 13) return;
+    var idx = 0;
+    var data_len = null;
+    // Break the list
+    clean_data = exclude_list.value.split('\n');
+    data_len = clean_data.length;
+    // Clean the list
+    for (idx = 0; idx < data_len; idx++) {
+        clean_data[idx] = cleanURL(clean_data[idx]);
+    }
+    exclude_list.value = clean_data.join('\n');
+}
+
+// Function to clean url
+function cleanURL(url) {
+    if(url.match(/http:\/\//)) {
+        url = url.substring(7);
+    }
+    if(url.match(/^www\./)) {
+        url = url.substring(4);
+    }
+    return url;
+}
+
 function set_status(data, timer){
     // Update status to let user know options were saved.
     var status = document.getElementById("status");
@@ -49,18 +76,29 @@ function set_status(data, timer){
 // Saves options to localStorage.
 function save_options() {
     localStorage["timer"] = timer_input.value;
+    // Force the list to be sanitized before saving it.
+    sanitize_list({keyCode: 13});
+    localStorage["exclude_list"] = exclude_list.value;
     set_status("Options Saved", 750);
 }
 
 // Restores timer_input value from localStorage
 function restore_options() {
     var timer = localStorage["timer"];
+    var exclude = localStorage["exclude_list"];
     if (!timer) timer = 15;
+    if (!exclude) exclude = null;
+
     timer_input.value = timer;
+    exclude_list.value = exclude;
 }
 
 var timer_input = document.getElementById("timer");
+var exclude_list = document.getElementById("exclude_list");
 var save_button = document.getElementById('save');
+
 timer_input.addEventListener('input', check_min);
+exclude_list.addEventListener('keypress', sanitize_list);
 save_button.addEventListener('click', save_options);
 document.addEventListener('DOMContentLoaded', restore_options);
+

@@ -1,8 +1,15 @@
 <html>
-<head><title>blackpearl - options</title></head>
+
+<head>
+<link rel="stylesheet" href="css/pure-min.css">
+<link rel="stylesheet" href="css/blackpearl.css">
+<title>blackpearl - options</title>
+</head>
 
 <body>
 
+<div class="pure-u-r content" id="layout">
+<h1>blackpearl</h1>
 
 <p>blackpearl is an extension doing only one thing:</p>
 <ul>
@@ -14,11 +21,30 @@
 <p>To avoid a bloated browser which takes up huge amount of RAM because of leaky
 webpages/extension.</p>
 
-<p>Select a timer: (in Minutes, it can't be less than 1)</p>
-<input type="number" name="timer" id="timer" min="1">
-<button id="save">Save</button>
-<br>
+<h2>Options</h2>
+
+<b>Note:</b> Enter only one domain per line in the exclude list.
+
+<div class="pure-form pure-form-aligned">
+    <fieldset>
+        <div class="pure-control-group">
+            <label for="name">Timer (in mn)</label>
+            <input type="number" name="timer" id="timer" min="1">
+        </div>
+
+        <div class="pure-control-group">
+            <label for="exclude">Exclude domain list</label>
+            <textarea id="exclude_list" rows="4" cols="18" placeholder="google.com"></textarea>
+        </div>
+
+        <div class="pure-controls">
+            <button class="pure-button" id="save">Save</button>
+        </div>
+    </fieldset>
+</div>
 <div id="status"></div>
+
+</div>
 </body>
 
 <script src="options.js"></script>
