@@ -27,29 +27,36 @@
 */
 
 var tab_array = [];
-var forbidden_url = ["chrome://", "chrome-extension://", "chrome-devtools://"];
+var FORBIDDEN_URL_ORIG = ["chrome://", "chrome-extension://", "chrome-devtools://"];
+var FORBIDDEN_URL = FORBIDDEN_URL_ORIG;
 var TIMEOUT_TIMER = 15;
 if (localStorage.getItem("timer") !== null)
     TIMEOUT_TIMER = localStorage["timer"];
 
 if (localStorage.getItem("exclude_list") !== null)
-    forbidden_url = forbidden_url.concat(localStorage["exclude_list"].split('\n'));
+    FORBIDDEN_URL = FORBIDDEN_URL_ORIG.concat(localStorage["exclude_list"].split('\n'));
 
 window.addEventListener("storage", update_storage, false);
 chrome.alarms.create({periodInMinutes: 1.0});
 
 // When users changes the options, update the timer value
 function update_storage(event_storage) {
-    if (event_storage.key !== "timer") return;
-    TIMEOUT_TIMER = event_storage.new_value;
+    if (event_storage.key === "timer") {
+        TIMEOUT_TIMER = event_storage.newValue;
+    } else if (event_storage.key === "exclude_list") {
+        if (event_storage.newValue === "") {
+            FORBIDDEN_URL = FORBIDDEN_URL_ORIG;
+            return;
+        }
+        FORBIDDEN_URL = FORBIDDEN_URL_ORIG.concat(event_storage.newValue.split('\n'));
+    }
 }
 
 // Returns true if a url is forbidden, false otherwise
 function is_forbidden(url) {
     var found = false;
-    forbidden_url.forEach(function(f_url) {
-        if (url.indexOf(f_url) !== -1)
-            found = true;
+    FORBIDDEN_URL.forEach(function(f_url) {
+        if (url.indexOf(f_url) !== -1) found = true;
     });
     return found;
 }
