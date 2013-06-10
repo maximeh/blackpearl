@@ -73,7 +73,7 @@ function findById(source, id) {
 chrome.windows.getAll({populate: true}, function (windows){
     windows.forEach(function(cwindow) {
         cwindow.tabs.forEach(function(tab) {
-            if (is_forbidden(tab.url) == true) return;
+            if (is_forbidden(tab.url) === true) return;
             tab_array.push({id: tab.id, timer: 0, killed: false });
         });
     });
