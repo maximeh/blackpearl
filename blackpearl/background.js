@@ -30,6 +30,7 @@ var tab_array = [];
 var FORBIDDEN_URL_ORIG = ["chrome://", "chrome-extension://", "chrome-devtools://"];
 var FORBIDDEN_URL = FORBIDDEN_URL_ORIG;
 var TIMEOUT_TIMER = 15;
+var PROCESSES = (chrome.processes !== undefined) ? chrome.processes : chrome.experimental.processes;
 if (localStorage.getItem("timer") !== null)
     TIMEOUT_TIMER = localStorage["timer"];
 
@@ -126,8 +127,8 @@ chrome.alarms.onAlarm.addListener(function() {
             tab.timer += 1;
             // If the tab's timer has gone out, kill it.
             if (tab.timer >= TIMEOUT_TIMER) {
-                chrome.experimental.processes.getProcessIdForTab(tab.id, function(processId) {
-                    chrome.experimental.processes.terminate(processId);
+                PROCESSES.getProcessIdForTab(tab.id, function(processId) {
+                    PROCESSES.terminate(processId);
                 });
                 tab.killed = true;
             }
