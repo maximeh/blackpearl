@@ -8,6 +8,7 @@ the options of the extension).
 
 This extension is not and never will be on the Chrome Store because it uses the
 [experimental api](http://developer.chrome.com/extensions/experimental.html).
+You also need to have Chrome on the dev channel.
 
 This preserves your windows and the tabs contained therein, but improves
 overall system performance by reducing CPU and (especially) memory consumption.
